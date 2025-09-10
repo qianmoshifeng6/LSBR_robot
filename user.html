@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户中心 - LBSR AI 远程机器人控制</title>
+    <link rel="icon" href="img/topic001.jpg">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .user-profile {
+            text-align: center;
+            padding: 20px;
+        }
+        .user-profile img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .user-info {
+            margin-top: 20px;
+        }
+        .user-info p {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">主页</a></li>
+            <li><a href="user.html">用户中心</a></li>
+            <li><a href="services.html">服务中心</a></li>
+            <li><a href="about.html">关于我们</a></li>
+            <li id="login-status">
+            </li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <section class="user-profile">
+            <img src="img/default-user.png" alt="用户头像">
+            <h2>欢迎，<span id="username"></span>!</h2>
+            <div class="user-info">
+                <p><strong>用户名:</strong> <span id="username-display"></span></p>
+                <p><strong>邮箱:</strong> <span id="email-display"></span></p>
+                <p><strong>注册时间:</strong> <span id="register-date"></span></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2025 LBSR AI 远程机器人控制中心 | 技术支持：AI智能区块长途运输机器人团队
+    </footer>
+
+    <script>
+        function updateLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const username = localStorage.getItem('username');
+            let loginStatus = document.getElementById('login-status');
+
+            if (isLoggedIn) {
+                loginStatus.innerHTML = `<span style="margin-right:10px;">欢迎，${username}！</span>
+                                         <button class="login-button" onclick="logout()">注销</button>`;
+            } else {
+                loginStatus.innerHTML = `<button class="login-button" onclick="goToLogin()">登录</button>`;
+                window.location.href = 'mqtt.html'; // 未登录跳转到登录页面
+            }
+        }
+
+        function goToLogin() {
+            window.location.href = 'mqtt.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            updateLoginStatus();
+            window.location.href = 'index.html'; // 注销后返回主页
+        }
+
+        // 页面加载时更新登录状态和用户信息
+        window.onload = function() {
+            updateLoginStatus();
+
+            // 显示用户信息
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                document.getElementById('username').innerText = localStorage.getItem('username');
+                document.getElementById('username-display').innerText = localStorage.getItem('username');
+                document.getElementById('email-display').innerText = 'admin@example.com'; // 示例邮箱
+                document.getElementById('register-date').innerText = '2025-09-10'; // 示例注册时间
+            }
+        };
+    </script>
+</body>
+</html>

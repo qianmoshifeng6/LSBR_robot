@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>服务中心 - LBSR AI 远程机器人控制</title>
+    <link rel="icon" href="img/topic001.jpg">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .service-list {
+            list-style: none;
+            padding: 0;
+        }
+        .service-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f0f0f0;
+        }
+        .service-item h3 {
+            margin-bottom: 10px;
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">主页</a></li>
+            <li><a href="user.html">用户中心</a></li>
+            <li><a href="services.html">服务中心</a></li>
+            <li><a href="about.html">关于我们</a></li>
+            <li id="login-status">
+                <!-- 登录/注销 按钮 -->
+            </li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <h2>服务中心</h2>
+        <ul class="service-list">
+            <li class="service-item">
+                <h3>技术支持</h3>
+                <p>提供 7x24 小时在线技术支持，解答您在使用过程中遇到的问题。</p>
+            </li>
+            <li class="service-item">
+                <h3>常见问题解答</h3>
+                <p>整理了常见问题解答，帮助您快速解决问题。</p>
+            </li>
+            <li class="service-item">
+                <h3>远程协助</h3>
+                <p>提供远程协助服务，帮助您配置和使用机器人。</p>
+            </li>
+            <li class="service-item">
+                <h3>软件更新</h3>
+                <p>定期发布软件更新，提供新功能和修复已知问题。</p>
+            </li>
+        </ul>
+    </main>
+
+    <footer>
+        &copy; 2025 LBSR AI 远程机器人控制中心 | 技术支持：AI智能区块长途运输机器人团队
+    </footer>
+
+    <script>
+        function updateLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const username = localStorage.getItem('username');
+            let loginStatus = document.getElementById('login-status');
+
+            if (isLoggedIn) {
+                loginStatus.innerHTML = `<span style="margin-right:10px;">欢迎，${username}！</span>
+                                         <button class="login-button" onclick="logout()">注销</button>`;
+            } else {
+                loginStatus.innerHTML = `<button class="login-button" onclick="goToLogin()">登录</button>`;
+                window.location.href = 'mqtt.html'; // 未登录跳转到登录页面
+            }
+        }
+
+        function goToLogin() {
+            window.location.href = 'mqtt.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            updateLoginStatus();
+            window.location.href = 'index.html'; // 注销后返回主页
+        }
+
+        // 页面加载时更新登录状态
+        window.onload = updateLoginStatus;
+    </script>
+</body>
+</html>
