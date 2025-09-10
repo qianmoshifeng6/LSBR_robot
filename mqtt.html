@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MQTT 控制页面</title>
+    <link rel="icon" href="img/topic001.jpg">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        /* MQTT 控制区域样式 */
+        .mqtt-control {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* 登录表单样式 */
+        .login-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .login-form input {
+            margin: 5px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-form">
+        <h2>登录</h2>
+        <input type="text" id="username" placeholder="用户名"><br>
+        <input type="password" id="password" placeholder="密码"><br>
+        <button onclick="login()">登录</button>
+    </div>
+
+    <div id="mqtt-control" class="mqtt-control" style="display:none;">
+        <h2>MQTT 控制</h2>
+        <p>连接状态：<span id="mqtt-status">未连接</span></p>
+        <button onclick="connectMQTT()">连接 MQTT 服务器</button>
+        <br><br>
+        <label for="topic">Topic:</label>
+        <input type="text" id="topic" value="robot/control">
+        <br><br>
+        <label for="message">Message:</label>
+        <input type="text" id="message" value="start">
+        <br><br>
+        <button onclick="publishMessage()">发送消息</button>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'admin' && password === 'password') {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', username);
+                window.location.href = 'LSBR_website.html';
+            } else {
+                alert('用户名或密码错误!');
+            }
+        }
+
+        // MQTT 相关函数 (需要实现)
+        function connectMQTT() {
+            document.getElementById('mqtt-status').innerText = '已连接';
+            alert('连接 MQTT 服务器!');
+        }
+
+        function publishMessage() {
+            var topic = document.getElementById('topic').value;
+            var message = document.getElementById('message').value;
+            alert('发布消息到 Topic: ' + topic + ', 消息内容: ' + message);
+        }
+    </script>
+</body>
+</html>
