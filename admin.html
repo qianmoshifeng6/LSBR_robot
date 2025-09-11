@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员面板</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .admin-panel {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(44,62,80,0.10);
+        }
+        .admin-panel h2 {
+            color: var(--brand-primary);
+            text-align: center;
+        }
+        .admin-panel button {
+            background-color: var(--brand-primary);
+            color: var(--text-light);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .admin-panel button:hover {
+            background-color: var(--brand-secondary);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">返回首页</a></li>
+            <li id="login-status">
+                <!-- 登录/注销 按钮 -->
+            </li>
+        </ul>
+    </nav>
+    <div class="container admin-panel">
+        <h2>管理员面板</h2>
+        <button onclick="alert('功能开发中')">用户管理</button>
+        <button onclick="alert('功能开发中')">系统设置</button>
+        <button onclick="alert('功能开发中')">数据统计</button>
+    </div>
+    <script src="shared.js"></script>
+</body>
+</html>

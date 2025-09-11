@@ -72,34 +72,6 @@
         &copy; 2025 LBSR AI 远程机器人控制中心 | 技术支持：AI智能区块长途运输机器人团队
     </footer>
 
-    <script>
-        function updateLoginStatus() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            const username = localStorage.getItem('username');
-            let loginStatus = document.getElementById('login-status');
-
-            if (isLoggedIn) {
-                loginStatus.innerHTML = `<span style="margin-right:10px;">欢迎，${username}！</span>
-                                         <button class="login-button" onclick="logout()">注销</button>`;
-            } else {
-                loginStatus.innerHTML = `<button class="login-button" onclick="goToLogin()">登录</button>`;
-                window.location.href = 'mqtt.html'; // 未登录跳转到登录页面
-            }
-        }
-
-        function goToLogin() {
-            window.location.href = 'mqtt.html';
-        }
-
-        function logout() {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('username');
-            updateLoginStatus();
-            window.location.href = 'index.html'; // 注销后返回主页
-        }
-
-        // 页面加载时更新登录状态
-        window.onload = updateLoginStatus;
-    </script>
+    <script src="shared.js"></script>
 </body>
 </html>

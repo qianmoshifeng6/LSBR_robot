@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>3D远程控制</title>
+    <link rel="icon" href="img/topic001.jpg">
+    <link rel="stylesheet" href="shared.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@latest/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@latest/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mqtt@4.3.7/dist/mqtt.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        #canvas {
+            display: block;
+        }
+        .rotation-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+        }
+        .control-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        button {
+            margin: 5px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="control-panel">
+        <button id="connectBtn">连接MQTT</button>
+        <button id="scanBtn">扫描建模</button>
+        <button id="controlBtn">控制硬件</button>
+        <button id="previewBtn" onclick="togglePreviewMode()">预览模式</button>
+    <script>
+        // 初始化场景、相机和渲染器
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // 添加轨道控制器
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // 添加光源
+        const light = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(light);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+        
+        // 添加模型
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+        camera.position.z = 5;
+
+        // 添加轮廓效果
+        const outlineMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0x00ffff, 
+            side: THREE.BackSide 
+        });
+        const outlineMesh = new THREE.Mesh(geometry, outlineMaterial);
+        outlineMesh.scale.set(1.1, 1.1, 1.1);
+        cube.add(outlineMesh);
+
+        // 动画循环
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // 窗口大小调整
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        function togglePreviewMode() {
+            const previewBtn = document.getElementById('previewBtn');
+            const isPreviewMode = previewBtn.textContent === '退出预览';
+            previewBtn.textContent = isPreviewMode ? '预览模式' : '退出预览';
+            // 添加预览模式逻辑
+            console.log('预览模式已切换:', !isPreviewMode);
+        }
+    </script>
+        <div id="status">状态: 未连接</div>
+        <div style="margin-top: 10px;">
+            <label for="rotationSpeed">旋转速度: </label>
+            <input type="range" id="rotationSpeed" min="0.01" max="0.1" step="0.01" value="0.01">
+            <span id="speedValue">0.01</span>
+        </div>
+        <div style="margin-top: 10px;">
+            <button id="reverseRotation">反向旋转</button>
+        </div>
+    </div>
+
+    <script>
+        // 初始化场景、相机和渲染器
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // 添加轨道控制器
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // 添加光源
+        const light = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(light);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+        
+        // 添加模型
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+        camera.position.z = 5;
+
+        // 添加轮廓效果
+        const outlineMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0x00ffff, 
+            side: THREE.BackSide 
+        });
+        const outlineMesh = new THREE.Mesh(geometry, outlineMaterial);
+        outlineMesh.scale.set(1.1, 1.1, 1.1);
+        cube.add(outlineMesh);
+
+        // 动画循环
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // 窗口大小调整
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        // 初始化Three.js场景
+        const scene = new THREE.Scene();
+        
+        // 添加天空背景（渐变效果）
+        const skyColor = 0xB1E1FF; // 天蓝色
+        const groundColor = 0xB97A20; // 棕色
+        const intensity = 1;
+        const sky = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+        scene.add(sky);
+        
+        // 添加地面
+        const groundGeometry = new THREE.PlaneGeometry(100, 100);
+        const groundMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x8B4513,
+            roughness: 0.8,
+            metalness: 0.2
+        });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2; // 旋转90度使其水平
+        ground.position.y = -2; // 调整地面位置
+        scene.add(ground);
+        
+        // 添加坐标轴辅助线
+        const axesHelper = new THREE.AxesHelper(10); // 增加坐标轴长度
+        scene.add(axesHelper);
+        
+        // 添加光源以增强轮廓
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+        
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+        /**
+ * Adjusts the renderer size and camera aspect ratio to match the window dimensions.
+ * Uses requestAnimationFrame to optimize performance during window resizing.
+ */
+function resizeRenderer() {
+    // Throttle the resize event using requestAnimationFrame
+    requestAnimationFrame(() => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        // Skip if dimensions are invalid
+        if (width <= 0 || height <= 0) return;
+
+        // Update renderer and camera
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+    });
+}
+        resizeRenderer();
+        window.addEventListener('resize', resizeRenderer);
+
+        // 添加坐标轴辅助线
+        const axesHelper = new THREE.AxesHelper(10); // 增加坐标轴长度
+        scene.add(axesHelper);
+
+        // 添加一个立方体作为示例模型
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshPhongMaterial({ 
+            color: 0x00ff00,
+            specular: 0x111111,
+            shininess: 30
+        });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+        // 添加边缘高亮效果
+        const edges = new THREE.EdgesGeometry(geometry);
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
+        const wireframe = new THREE.LineSegments(edges, lineMaterial);
+        cube.add(wireframe);
+
+        // 添加光源以增强轮廓
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+
+        camera.position.z = 5;
+
+        // 键盘控制变量
+        const keyState = {};
+        document.addEventListener('keydown', (event) => {
+            keyState[event.key] = true;
+        });
+        document.addEventListener('keyup', (event) => {
+            keyState[event.key] = false;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // 键盘控制模型移动
+            if (keyState['ArrowUp']) cube.position.y += 0.1;
+            if (keyState['ArrowDown']) cube.position.y -= 0.1;
+            if (keyState['ArrowLeft']) cube.position.x -= 0.1;
+            if (keyState['ArrowRight']) cube.position.x += 0.1;
+
+            // 旋转控制变量
+            let rotationSpeed = 0.01;
+            let rotationDirection = 1;
+
+            // 更新旋转速度显示
+            document.getElementById('rotationSpeed').addEventListener('input', (e) => {
+                rotationSpeed = parseFloat(e.target.value);
+                document.getElementById('speedValue').textContent = rotationSpeed.toFixed(2);
+            });
+
+            // 反向旋转
+            document.getElementById('reverseRotation').addEventListener('click', () => {
+                rotationDirection *= -1;
+            });
+
+            // 自动旋转模型
+            cube.rotation.x += rotationSpeed * rotationDirection;
+            cube.rotation.y += rotationSpeed * rotationDirection;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // MQTT连接
+        let mqttClient = null;
+        document.getElementById('connectBtn').addEventListener('click', () => {
+            mqttClient = mqtt.connect('mqtt://your-mqtt-server');
+            mqttClient.on('connect', () => {
+                document.getElementById('status').textContent = '状态: 已连接';
+            });
+        });
+
+        // 扫描建模
+        document.getElementById('scanBtn').addEventListener('click', () => {
+            if (mqttClient) {
+                mqttClient.publish('robot/scan', 'start');
+            }
+        });
+
+        // 控制硬件
+        document.getElementById('controlBtn').addEventListener('click', () => {
+            if (mqttClient) {
+                const command = JSON.stringify({
+                    action: 'move',
+                    x: cube.position.x,
+                    y: cube.position.y,
+                    z: cube.position.z
+                });
+                mqttClient.publish('robot/control', command);
+            }
+        });
+
+        // 预览模式
+        let isPreviewMode = false;
+        document.getElementById('previewBtn').addEventListener('click', () => {
+            isPreviewMode = !isPreviewMode;
+            cube.visible = !isPreviewMode;
+            document.getElementById('previewBtn').textContent = isPreviewMode ? '退出预览' : '预览模式';
+        });
+    </script>
+</body>
+</html>

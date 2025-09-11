@@ -1,22 +1,42 @@
+/* 颜色变量 */
+:root {
+    --brand-primary: #2980b9;
+    --brand-secondary: #1abc9c;
+    --text-primary: #333;
+    --text-light: #fff;
+    --page-bg: #f4f4f4;
+    --nav-bg: #34495e;
+    --status-error: #e74c3c;
+    --status-success: #2ecc71;
+}
+
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: var(--page-bg);
+    color: var(--text-primary); /* 统一文字颜色 */
+    line-height: 1.6; /* 增加行高，提高可读性 */
 }
 
+/* 导航栏 */
 nav {
-    background-color: #34495e;
-    color: white;
-    padding: 10px 0;
+    background-color: var(--nav-bg);
+    color: var(--text-light);
+    padding: 12px 0; /* 稍微增加padding */
     text-align: center;
     box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+    position: sticky; /* 导航栏置顶 */
+    top: 0;
+    z-index: 100; /* 确保在其他内容之上 */
 }
 
 nav ul {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex; /* 使用 Flexbox 布局 */
+    justify-content: center; /* 水平居中 */
 }
 
 nav li {
@@ -25,43 +45,48 @@ nav li {
 }
 
 nav a {
-    color: white;
+    color: var(--text-light);
     text-decoration: none;
     font-weight: 500;
     font-size: 1.08em;
-    transition: color 0.2s;
+    transition: color 0.3s ease; /* 缓动效果 */
 }
 
 nav a:hover {
-    color: #f1c40f;
+    color: var(--brand-secondary);
 }
 
+/* 容器 */
 .container {
     width: 90%;
     max-width: 1100px;
     margin: 30px auto 20px auto;
-    background-color: white;
-    padding: 28px 24px;
+    background-color: var(--text-light);
+    padding: 30px 26px; /* 稍微增加padding */
     border-radius: 16px;
     box-shadow: 0 2px 12px rgba(44,62,80,0.10);
 }
 
+/* 登录按钮 */
 .login-button {
-    background-color: #2980b9;
-    color: white;
-    padding: 10px 20px;
+    background-color: var(--brand-primary);
+    color: var(--text-light);
+    padding: 12px 24px; /* 稍微增加padding */
     border: none;
-    border-radius: 5px;
+    border-radius: 6px; /* 稍微增加圆角 */
     cursor: pointer;
     font-size: 1em;
-    transition: background 0.2s;
+    transition: background-color 0.3s ease; /* 缓动效果 */
 }
 
 .login-button:hover {
-    background-color: #1abc9c;
+    background-color: var(--brand-secondary);
 }
 
+/* 介绍 */
 .introduction {
     text-align: center;
     margin-top: 20px;
+    padding: 16px; /* 增加内边距 */
+    border-radius: 8px; /* 增加圆角 */
 }
